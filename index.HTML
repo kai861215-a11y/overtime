@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>加班費</title>
+
+<style>
+body {
+  font-family: -apple-system;
+  background: #111;
+  color: white;
+  padding: 20px;
+}
+
+h2 { text-align: center; }
+
+input {
+  width: 100%;
+  padding: 14px;
+  margin: 10px 0;
+  font-size: 18px;
+  border-radius: 10px;
+  border: none;
+}
+
+button {
+  width: 32%;
+  padding: 14px;
+  font-size: 16px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: none;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn1 { background: #444; color: white; }
+.btn2 { background: #666; color: white; }
+.btn3 { background: #888; color: white; }
+
+.result {
+  text-align: center;
+  font-size: 26px;
+  margin-top: 20px;
+}
+
+.small {
+  font-size: 14px;
+  color: #aaa;
+  text-align: center;
+}
+</style>
+</head>
+
+<body>
+
+<h2>加班費計算</h2>
+
+<input id="salary" placeholder="月薪（選填）">
+<input id="rate" placeholder="時薪">
+<input id="hours" placeholder="加班時數">
+
+<div class="row">
+  <button class="btn1" onclick="calc(1.33)">1.33</button>
+  <button class="btn2" onclick="calc(1.66)">1.66</button>
+  <button class="btn3" onclick="calc(2)">2倍</button>
+</div>
+
+<div class="result" id="result">0 元</div>
+<div class="small">會自動記住你的時薪</div>
+
+<script>
+// 載入資料
+document.getElementById("rate").value = localStorage.getItem("rate") || "";
+document.getElementById("salary").value = localStorage.getItem("salary") || "";
+
+// 月薪轉時薪（用 240 小時簡化）
+document.getElementById("salary").addEventListener("input", function(){
+  let salary = parseFloat(this.value);
+  if (salary) {
+    let hourly = salary / 240;
+    document.getElementById("rate").value = hourly.toFixed(1);
+  }
+});
+
+function calc(m){
+  let rate = parseFloat(document.getElementById("rate").value);
+  let hours = parseFloat(document.getElementById("hours").value);
+
+  if (!rate || !hours) {
+    document.getElementById("result").innerText = "請輸入數值";
+    return;
+  }
+
+  localStorage.setItem("rate", rate);
+  localStorage.setItem("salary", document.getElementById("salary").value);
+
+  let total = rate * hours * m;
+
+  document.getElementById("result").innerText = total.toFixed(0) + " 元";
+}
+</script>
+
+</body>
+</html>
